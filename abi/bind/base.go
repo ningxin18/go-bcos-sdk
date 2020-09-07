@@ -192,6 +192,14 @@ func (c *BoundContract) Transact(opts *TransactOpts, method string, params ...in
 	return c.transact(opts, &c.address, input)
 }
 
+func (c *BoundContract) Pack(opts *TransactOpts, method string, params ...interface{}) ([]byte, error) {
+	input, err := c.abi.Pack(method, params...)
+	if err != nil {
+		return input, err
+	}
+	return input, nil
+}
+
 func (c *BoundContract) AsyncTransact(opts *TransactOpts, handler func(*types.Receipt, error), method string, params ...interface{}) (*types.Transaction, error) {
 	// Otherwise pack up the parameters and invoke the contract
 	input, err := c.abi.Pack(method, params...)
