@@ -241,6 +241,10 @@ func (c *Client) SendTransaction(ctx context.Context, tx *types.Transaction) (*t
 	return c.apiHandler.SendRawTransaction(ctx, c.groupID, tx)
 }
 
+func (c *Client) SendRawTransaction(ctx context.Context, data string) (string, error) {
+	return c.apiHandler.SendRawTransaction_bcos(ctx, c.groupID, data)
+}
+
 func (c *Client) AsyncSendTransaction(ctx context.Context, tx *types.Transaction, handler func(*types.Receipt, error)) error {
 	return c.apiHandler.AsyncSendRawTransaction(ctx, c.groupID, tx, handler)
 }

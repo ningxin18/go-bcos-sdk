@@ -75,3 +75,8 @@ func SM2Sign(src []byte, priv *ecdsa.PrivateKey) (r, s *big.Int, err error) {
 		return r, s, err
 	}
 }
+
+func GenerateKey() ([]byte, error) {
+	k, _, _, err := elliptic.GenerateKey(elliptic.Sm2p256v1(), rand.Reader)
+	return k, err
+}

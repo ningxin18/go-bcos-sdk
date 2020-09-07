@@ -160,6 +160,15 @@ func (api *APIHandler) SendRawTransaction(ctx context.Context, groupID int, tx *
 	}
 }
 
+func (api *APIHandler) SendRawTransaction_bcos(ctx context.Context, groupID int, data string) (string, error) {
+	var r string
+	err := api.CallContext(ctx, &r, "sendRawTransaction", groupID, data)
+	if err != nil {
+		return r, err
+	}
+	return r, nil
+}
+
 func (api *APIHandler) AsyncSendRawTransaction(ctx context.Context, groupID int, tx *types.Transaction, handler func(*types.Receipt, error)) error {
 	data, err := rlp.EncodeToBytes(tx)
 	if err != nil {
@@ -303,6 +312,15 @@ func (api *APIHandler) GetBlockNumber(ctx context.Context, groupID int) ([]byte,
 	}
 	js, err := json.MarshalIndent(raw, "", indent)
 	return js, err
+}
+
+func (api *APIHandler) GetBlockInt(ctx context.Context, groupID int) (*big.Int, error) {
+	var raw hexutil.Big
+	err := api.CallContext(ctx, &raw, "getBlockNumber", groupID)
+	if err != nil {
+		return nil, err
+	}
+	return (*big.Int)(&raw), nil
 }
 
 // GetBlockLimit returns the blocklimit for current blocknumber
