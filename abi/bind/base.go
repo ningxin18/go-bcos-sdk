@@ -19,15 +19,14 @@ package bind
 import (
 	"context"
 	"crypto/rand"
-	"errors"
 	"fmt"
 	"math/big"
 
+	"github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ningxin18/go-bcos-sdk/abi"
 	"github.com/ningxin18/go-bcos-sdk/core/types"
 	"github.com/ningxin18/go-bcos-sdk/event"
-	"github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/common"
 )
 
 // SignerFn is a signer function callback when a contract requires a method to
@@ -107,14 +106,14 @@ func DeployContract(opts *TransactOpts, abi abi.ABI, bytecode []byte, backend Co
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	tx, receipt, err := c.transact(opts, nil, append(bytecode, input...))
+	tx, _, err := c.transact(opts, nil, append(bytecode, input...))
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	if receipt == nil {
-		return common.Address{}, nil, nil, errors.New("deploy failed, receipt is nil")
-	}
-	c.address = receipt.ContractAddress
+	//if receipt == nil {
+	//	return common.Address{}, nil, nil, errors.New("deploy failed, receipt is nil")
+	//}
+	//c.address = receipt.ContractAddress
 	return c.address, tx, c, nil
 }
 
@@ -218,6 +217,18 @@ func (c *BoundContract) transact(opts *TransactOpts, contract *common.Address, i
 	if err != nil {
 		return nil, nil, err
 	}
+	//var receipt *types.Receipt
+	//if receipt, err = c.transactor.SendTransaction(ensureContext(opts.Context), signedTx); err != nil {
+	//	return nil, nil, err
+	//}
+	return signedTx, nil, nil
+}
+
+func (c *BoundContract) transact2(opts *TransactOpts, contract *common.Address, input []byte) (*types.Transaction, *types.Receipt, error) {
+	signedTx, err := c.generateSignedTx2(opts, contract, input)
+	if err != nil {
+		return nil, nil, err
+	}
 	var receipt *types.Receipt
 	if receipt, err = c.transactor.SendTransaction(ensureContext(opts.Context), signedTx); err != nil {
 		return nil, nil, err
@@ -302,16 +313,15 @@ func (c *BoundContract) generateSignedTx(opts *TransactOpts, contract *common.Ad
 	} else {
 		rawTx = types.NewTransaction(nonce, c.address, value, gasLimit, gasPrice, blockLimit, input, chainID, groupID, extraData, c.transactor.SMCrypto())
 	}
-	if opts.Signer == nil {
-		return nil, errors.New("no signer to authorize the transaction with")
-	}
-	signedTx, err := opts.Signer(types.HomesteadSigner{}, opts.From, rawTx)
-	if err != nil {
-		return nil, err
-	}
-	return signedTx, nil
+	//if opts.Signer == nil {
+	//	return nil, errors.New("no signer to authorize the transaction with")
+	//}
+	//signedTx, err := opts.Signer(types.HomesteadSigner{}, opts.From, rawTx)
+	//if err != nil {
+	//	return nil, err
+	//}
+	return rawTx, nil
 }
-
 
 func (c *BoundContract) generateSignedTx2(opts *TransactOpts, contract *common.Address, input []byte) (*types.Transaction, error) {
 	var err error

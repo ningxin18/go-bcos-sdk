@@ -167,5 +167,5 @@ type NewLog struct {
 	// Type for FISCO BCOS
 	Type string `json:"type"`
 	// list of topics provided by the contract.
-	Topics []interface{} `json:"topics" `
+	Topics []common.Hash `json:"topics" `
 }
