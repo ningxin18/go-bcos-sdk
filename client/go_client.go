@@ -331,6 +331,10 @@ func (c *Client) GetBlockNumber(ctx context.Context) ([]byte, error) {
 	return c.apiHandler.GetBlockNumber(ctx, c.groupID)
 }
 
+func (c *Client) GetBlockNumberInt(ctx context.Context) (*big.Int, error) {
+	return c.apiHandler.GetBlockNumberInt(ctx, c.groupID)
+}
+
 // GetBlockLimit returns the blocklimit for current blocknumber
 func (c *Client) GetBlockLimit(ctx context.Context) (*big.Int, error) {
 	return c.apiHandler.GetBlockLimit(ctx, c.groupID)

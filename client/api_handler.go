@@ -314,7 +314,7 @@ func (api *APIHandler) GetBlockNumber(ctx context.Context, groupID int) ([]byte,
 	return js, err
 }
 
-func (api *APIHandler) GetBlockInt(ctx context.Context, groupID int) (*big.Int, error) {
+func (api *APIHandler) GetBlockNumberInt(ctx context.Context, groupID int) (*big.Int, error) {
 	var raw hexutil.Big
 	err := api.CallContext(ctx, &raw, "getBlockNumber", groupID)
 	if err != nil {
